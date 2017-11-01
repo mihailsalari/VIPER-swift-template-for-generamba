@@ -1,0 +1,59 @@
+//
+//  {{ prefix }}{{ module_info.name }}{{ module_info.file_name }}
+//  {{ module_info.project_name }}
+//
+//  Created by {{ developer.name }} on {{ date }}.
+//  Copyright © {{ year }} {{ developer.company }}. All rights reserved.
+//
+
+import Foundation
+
+final class {{ module_info.name }}Assembly {
+	
+	var presenter  : {{ module_info.name }}Presenter
+	var router     : {{ module_info.name }}Router
+	var view       : {{ module_info.name }}ViewController
+	var interactor : {{ module_info.name }}Interactor
+	
+	required init() {
+        <#Make sure dependencies are injected#>
+		self.router     = {{ module_info.name }}Router()
+		self.view       = {{ module_info.name }}ViewController()
+		self.interactor = {{ module_info.name }}Interactor()
+		self.presenter  = {{ module_info.name }}Presenter()
+	}
+	
+	func configureRouter(transitionHandler: TransitionHandler) -> {{ module_info.name }}Router {
+		
+		router.transitionHandler = transitionHandler
+		return router
+	}
+	
+	func configureView(presenter: {{ module_info.name }}Presenter) -> {{ module_info.name }}ViewController {
+		
+		view.output = presenter
+		return view
+	}
+	
+	func configureInteractor(presenter: {{ module_info.name }}Presenter) -> {{ module_info.name }}Interactor {
+		
+		interactor.output = presenter
+		return interactor
+	}
+	
+	func configurePresenter(router: {{ module_info.name }}Router, interactor: {{ module_info.name }}Interactor, view: {{ module_info.name }}ViewController) -> {{ module_info.name }}Presenter {
+		
+		presenter.interactor = interactor
+		presenter.router     = router
+		presenter.view       = view
+		return presenter
+	}
+
+    func resolve() {
+		let presenter = configurePresenter(router: router, interactor: interactor, view: view)
+		self.presenter = presenter
+		self.view = configureView(presenter: presenter)
+		self.router = configureRouter(transitionHandler: view)
+		self.interactor = configureInteractor(presenter: presenter)
+	}
+}
