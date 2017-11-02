@@ -32,3 +32,11 @@ extension {{ module_info.name }}ViewController: {{module_info.name}}ViewInput {
     func setupInitialState() {
     }
 }
+
+// MARK: - ViewOutputProvider
+extension {{ module_info.name }}ViewController: ViewOutputProvider {
+    
+    var viewOutput: ModuleInput? {
+		return output as? ModuleInput
+	}
+}
